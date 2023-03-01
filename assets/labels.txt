@@ -1,2 +1,2 @@
-0 with mask
-1 without mask
+with mask
+without mask

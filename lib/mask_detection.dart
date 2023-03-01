@@ -49,12 +49,22 @@ class _MaskDetectionState extends State<MaskDetection> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Mask Detection App"),
-        // actions: [
-        //   IconButton(onPressed: (){
-        //     // Navigator.push(context, MaterialPageRoute(builder: (context)=> TfliteModel2()));
-        //   }, icon: Icon(Icons.navigate_next))
-        // ],
+        flexibleSpace: Container(
+
+          decoration: const BoxDecoration(
+
+            gradient: LinearGradient(
+               colors: [Colors.red, Colors.blue],
+             ),
+           ),
+        ),
+
+        title: const Text(
+          "Face Mask Detection",
+          style: TextStyle(fontSize: 25),
+        ),
+
+        // automaticallyImplyLeading: false,
       ),
       body: ListView(
         children: [
@@ -62,12 +72,9 @@ class _MaskDetectionState extends State<MaskDetection> {
             margin: const EdgeInsets.all(10),
             child: Image.file(_image),
           ):Container(
-            margin: const EdgeInsets.all(10),
-            child: const Opacity(
-              opacity: 0.8,
-              child: Center(
-                child: Text("No image selected"),
-              ),
+            margin: const EdgeInsets.only(top: 200),
+            child: Center(
+              child: Text("No image selected", style: TextStyle(fontSize: 25),),
             ),
           ),
           SingleChildScrollView(
@@ -75,11 +82,18 @@ class _MaskDetectionState extends State<MaskDetection> {
               children: (imageSelect)?_results.map((result) {
                 return Card(
                   child: Container(
-                    margin: EdgeInsets.all(10),
-                    child: Text(
-                      "${result['label']} - ${result['confidence'].toStringAsFixed(2)}",
-                      style: const TextStyle(color: Colors.red,
-                          fontSize: 20),
+                    width: 200,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [Colors.red, Colors.blue]),
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child:  Center(
+                      child: Text(
+                        "${result['label']} - ${result['confidence'].toStringAsFixed(2)}",
+                        style: const TextStyle(color: Colors.white,
+                            fontSize: 20),
+                      ),
                     ),
                   ),
                 );
@@ -92,7 +106,14 @@ class _MaskDetectionState extends State<MaskDetection> {
       floatingActionButton: FloatingActionButton(
         onPressed: pickImage,
         tooltip: "Pick Image",
-        child: const Icon(Icons.image),
+        child:  Container(
+          width: 60,
+          height: 60,
+          child: Icon(Icons.image),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(colors: [Colors.red, Colors.blue])),
+        ),
       ),
     );
   }
@@ -104,5 +125,39 @@ class _MaskDetectionState extends State<MaskDetection> {
     );
     File image=File(pickedFile!.path);
     imageClassification(image);
+  }
+}
+
+
+
+
+class GradientIcon extends StatelessWidget {
+  GradientIcon(
+      this.icon,
+      this.size,
+      this.gradient,
+      );
+
+  final IconData icon;
+  final double size;
+  final Gradient gradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      child: SizedBox(
+        width: size * 1.2,
+        height: size * 1.2,
+        child: Icon(
+          icon,
+          size: size,
+          color: Colors.white,
+        ),
+      ),
+      shaderCallback: (Rect bounds) {
+        final Rect rect = Rect.fromLTRB(0, 0, size, size);
+        return gradient.createShader(rect);
+      },
+    );
   }
 }
