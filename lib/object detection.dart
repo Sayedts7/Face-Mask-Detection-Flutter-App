@@ -2,17 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mask_detection/object%20detection.dart';
+import 'package:mask_detection/mask_detection.dart';
 import 'package:tflite/tflite.dart';
 
-class MaskDetection extends StatefulWidget {
-  const MaskDetection({Key? key}) : super(key: key);
+class ObjectDetection extends StatefulWidget {
+  const ObjectDetection({Key? key}) : super(key: key);
 
   @override
-  _MaskDetectionState createState() => _MaskDetectionState();
+  _ObjectDetectionState createState() => _ObjectDetectionState();
 }
 
-class _MaskDetectionState extends State<MaskDetection> {
+class _ObjectDetectionState extends State<ObjectDetection> {
 
   late File _image;
   late List _results;
@@ -27,7 +27,7 @@ class _MaskDetectionState extends State<MaskDetection> {
   async {
     Tflite.close();
     String res;
-    res=(await Tflite.loadModel(model: "assets/model_unquant.tflite",labels: "assets/labelsM.txt"))!;
+    res=(await Tflite.loadModel(model: "assets/model.tflite",labels: "assets/labels.txt"))!;
     print("Models loading status: $res");
   }
 
@@ -55,13 +55,13 @@ class _MaskDetectionState extends State<MaskDetection> {
           decoration: const BoxDecoration(
 
             gradient: LinearGradient(
-               colors: [Colors.red, Colors.blue],
-             ),
-           ),
+              colors: [Colors.red, Colors.blue],
+            ),
+          ),
         ),
 
         title: const Text(
-          "Face Mask Detection",
+          "Object Detection",
           style: TextStyle(fontSize: 25),
         ),
 
@@ -80,31 +80,34 @@ class _MaskDetectionState extends State<MaskDetection> {
                 'Machine Learning',
               ),
               accountEmail: null),
-          const ListTile(
-            leading: Icon(
+
+          ListTile(
+            leading: const Icon(
               Icons.masks,
               color: Colors.red,
             ),
-            title: Text(
-              'Mask Detection', style: TextStyle(  color: Colors.grey),
-
+            title: const Text(
+              'Mask Detection',
             ),
+
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>MaskDetection()));
+            },
 
           ),
           const Divider(
             color: Colors.blue,
           ),
-          ListTile(
-            leading: const Icon(
+          const ListTile(
+            leading: Icon(
               Icons.add,
               color: Colors.red,
             ),
-            title: const Text(
-              'Object Detection',
+            title: Text(
+              'Object Detection',   style: TextStyle(  color: Colors.grey),
+
             ),
-            onTap: () {
-               Navigator.push(context, MaterialPageRoute(builder: (context)=>ObjectDetection()));
-            },
+
           ),
           const Divider(
             color: Colors.blue,
@@ -130,8 +133,8 @@ class _MaskDetectionState extends State<MaskDetection> {
                     width: 200,
                     height: 50,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [Colors.red, Colors.blue]),
-                      borderRadius: BorderRadius.circular(10)
+                        gradient: LinearGradient(colors: [Colors.red, Colors.blue]),
+                        borderRadius: BorderRadius.circular(10)
                     ),
                     child:  Center(
                       child: Text(
